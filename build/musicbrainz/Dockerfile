@@ -32,6 +32,8 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.asc] https://deb.nodesourc
         # Needed for building perl
         build-essential \
         bzip2 \
+        # Needed for admin/MBImport.pl to import files of known type only
+        file \
         gettext \
         g++ \
         git \
