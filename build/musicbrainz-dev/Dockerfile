@@ -32,6 +32,8 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.asc] https://deb.nodesourc
         bash-completion \
         build-essential \
         bzip2 \
+        # Needed for admin/MBImport.pl to import files of known type only
+        file \
         gettext \
         g++ \
         git \
@@ -72,7 +74,7 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.asc] https://deb.nodesourc
     rm -rf /var/lib/apt/lists/* && \
     # Install perl (in a more recent version than available with apt)
     cd /usr/src && \
-    curl -sSLO https://cpan.metacpan.org/authors/id/P/PE/PEVANS/perl-$PERL_VERSION.tar.gz && \
+    curl -sSLO --retry 5 https://cpan.metacpan.org/authors/id/P/PE/PEVANS/perl-$PERL_VERSION.tar.gz && \
     echo "$PERL_SRC_SUM *perl-$PERL_VERSION.tar.gz" | sha256sum --strict --check - && \
     tar -xzf perl-$PERL_VERSION.tar.gz && \
     cd perl-$PERL_VERSION && \
@@ -89,7 +91,7 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.asc] https://deb.nodesourc
     rm -fr /usr/src/perl-$PERL_VERSION* && \
     # Install cpanm (needed to help with updating Perl modules)
     cd /usr/src && \
-    curl -sSLO https://www.cpan.org/authors/id/M/MI/MIYAGAWA/App-cpanminus-$CPANMINUS_VERSION.tar.gz && \
+    curl -sSLO --retry 5 https://www.cpan.org/authors/id/M/MI/MIYAGAWA/App-cpanminus-$CPANMINUS_VERSION.tar.gz && \
     echo "$CPANMINUS_SRC_SUM *App-cpanminus-$CPANMINUS_VERSION.tar.gz" | sha256sum --strict --check - && \
     tar -xzf App-cpanminus-$CPANMINUS_VERSION.tar.gz && \
     cd App-cpanminus-$CPANMINUS_VERSION && \
@@ -100,7 +102,7 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.asc] https://deb.nodesourc
     cpanm local::lib && \
     rm -fr /root/.cpanm && \
     # Install ts (needed to run admin background task scripts locally)
-    curl -sSL https://git.joeyh.name/index.cgi/moreutils.git/plain/ts?h=0.69 -o /usr/local/bin/ts && \
+    curl -sSL --retry 5 https://git.joeyh.name/index.cgi/moreutils.git/plain/ts?h=0.69 -o /usr/local/bin/ts && \
     echo '01b67f3d81e6205f01cc0ada87039293ebc56596955225300dd69ec1257124f5 */usr/local/bin/ts' | sha256sum --strict --check - && \
     chmod +x /usr/local/bin/ts && \
     # Install yarn from nodejs
